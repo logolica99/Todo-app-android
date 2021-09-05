@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Alert } from 'react-native';
 
 
 export default function AddTodo({ setTodos }) {
@@ -11,14 +11,25 @@ export default function AddTodo({ setTodos }) {
     }
 
     const submitHandler = text => {
-        setTodos(prevTodos => {
-            return [
-                { text: text, key: Math.random().toString() },
-                ...prevTodos,
-            ]
-        })
-        setText("")
-      
+
+        if (text.length > 3) {
+
+            setTodos(prevTodos => {
+                return [
+                    { text: text, key: Math.random().toString() },
+                    ...prevTodos,
+                ]
+            })
+            setText("")
+
+        } else {
+            Alert.alert('OOPS!', "Todos must be at least three charachters long", [
+
+                { text: "UnderStood", onPress: () => console.log("alert closed") }
+            ])
+        }
+
+
     }
 
     return (
@@ -28,6 +39,8 @@ export default function AddTodo({ setTodos }) {
                 placeholder="new todo..."
                 onChangeText={handleChange}
                 value={text}
+                onSubmitEditing={() => submitHandler(text)}
+
             />
             <Button onPress={() => submitHandler(text)} title="add todo" color="coral" />
         </View>
